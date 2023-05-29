@@ -9,9 +9,11 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest src",
-    "test:cover": "jest --coverage"
+    "test:cover": "jest --coverage",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "husky": "^8.0.3",
     "nanoid": "^4.0.2",
     "postcss": "^8.4.23",
     "react": "^18.2.0",
