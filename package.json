@@ -10,7 +10,12 @@
     "preview": "vite preview",
     "test": "jest src",
     "test:cover": "jest --coverage",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docker:compose": "docker-compose up -d",
+    "client:dev": "npm run dev --workspace=client",
+    "server:dev": "wait-on tcp:6379 && npm run start:dev --workspace=server",
+    "start": "concurrently 'npm:docker:compose' 'npm:server:dev' 'npm:client:dev'",
+    "stop": "docker-compose down"
   },
   "dependencies": {
     "husky": "^8.0.3",
@@ -39,12 +44,15 @@
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
+    "concurrently": "^8.0.1",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^29.5.0"
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "wait-on": "^7.0.1"
   }
 }
