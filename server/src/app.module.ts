@@ -4,10 +4,13 @@ import { AppService } from './app.service';
 import { PollsController } from './polls/polls.controller';
 import { PollsModule } from './polls/polls.module';
 import { PollsService } from './polls/polls.service';
+import { REDISModule } from './config.module';
+import { PollsRedisStore } from './polls/polls.redis.store';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [PollsModule],
+  imports: [PollsModule, REDISModule,ConfigModule.forRoot()],
   controllers: [AppController, PollsController],
-  providers: [AppService,PollsService],
+  providers: [AppService,ConfigService,PollsService,PollsRedisStore],
 })
 export class AppModule {}
