@@ -16,7 +16,6 @@ export class PollsRedisStore {
     configService: ConfigService,
     @Inject(IORedisKey) private readonly redisClient: Redis,
   ) {
-    this.logger.debug(JSON.stringify(configService))
     this.ttl = configService.get('POLL_DURATION');
   }
 
