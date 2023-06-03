@@ -1,14 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { createPollID, createUserID } from '../utils/ids';
-import { PollsRedisStore } from './polls.redis.store';
-import { CreatePollFields, JoinPollFields, RejoinPollFields } from './types';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, Logger } from "@nestjs/common";
+import { createPollID, createUserID } from "../utils/ids";
+import { PollsRedisStore } from "./polls.redis.store";
+import {
+  CreatePollFields,
+  JoinPollFields,
+  RejoinPollFields,
+} from "../utils/types";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class PollsService {
   private readonly logger = new Logger(PollsService.name);
-  constructor(private readonly PollsRedisStore: PollsRedisStore,
-    private readonly jwtService: JwtService,) {}
+  constructor(
+    private readonly PollsRedisStore: PollsRedisStore,
+    private readonly jwtService: JwtService
+  ) {}
   async createPoll(fields: CreatePollFields) {
     const pollID = createPollID();
     const userID = createUserID();
@@ -20,7 +26,7 @@ export class PollsService {
     });
 
     this.logger.debug(
-      `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`,
+      `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`
     );
 
     const signedString = this.jwtService.sign(
@@ -30,7 +36,7 @@ export class PollsService {
       },
       {
         subject: userID,
-      },
+      }
     );
 
     return {
@@ -43,13 +49,13 @@ export class PollsService {
     const userID = createUserID();
 
     this.logger.debug(
-      `Fetching poll with ID: ${fields.pollID} for user with ID: ${userID}`,
+      `Fetching poll with ID: ${fields.pollID} for user with ID: ${userID}`
     );
 
     const joinedPoll = await this.PollsRedisStore.getPoll(fields.pollID);
 
     this.logger.debug(
-      `Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`,
+      `Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`
     );
 
     const signedString = this.jwtService.sign(
@@ -59,7 +65,7 @@ export class PollsService {
       },
       {
         subject: userID,
-      },
+      }
     );
 
     return {
@@ -70,9 +76,10 @@ export class PollsService {
 
   async rejoinPoll(fields: RejoinPollFields) {
     this.logger.debug(
-      `Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`,
+      `Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`
     );
-
+     
+    console.log(typeof fields)
     const joinedPoll = await this.PollsRedisStore.addParticipant(fields);
 
     return joinedPoll;

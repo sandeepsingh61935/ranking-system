@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
 import { IORedisKey } from 'src/redis.module';
-import { AddParticipantData, CreatePollData } from './types';
+import { AddParticipantData, CreatePollData } from '../utils/types';
 import { Poll } from 'shared';
 
 @Injectable()
@@ -91,16 +91,15 @@ export class PollsRedisStore {
     );
 
     const key = `polls:${pollID}`;
-    const participantPath = `.participants.${userID}`;
 
     try {
       let redisStoredValue = await this.redisClient.get(key);
       let pollJSON = JSON.parse(redisStoredValue);
-      pollJSON.participantPath = name;
+      pollJSON.participants[userID] = name;
 
       await this.redisClient.set(key,JSON.stringify(pollJSON));
 
-      const poll = JSON.parse(pollJSON) as Poll;
+      const poll = pollJSON as Poll;
 
       this.logger.debug(
         `Current Participants for pollID: ${pollID}:`,

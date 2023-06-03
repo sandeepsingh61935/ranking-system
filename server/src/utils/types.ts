@@ -29,3 +29,13 @@ export type CreatePollFields = {
     userID: string;
     name: string;
   };
+
+// auth-guard type
+export type AuthPayload = {
+  userID: string;
+  pollID: string;
+  name: string;
+};
+
+export type RequestWithAuth = Request & AuthPayload;
+export type AuthRequest = Request & { headers: { authorization: string } };
