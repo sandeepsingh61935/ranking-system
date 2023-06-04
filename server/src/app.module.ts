@@ -7,6 +7,8 @@ import { PollsService } from './polls/polls.service';
 import { REDISModule, jwtModule } from './config.module';
 import { PollsRedisStore } from './polls/polls.redis.store';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PollsGateway } from './polls/polls.gateway';
+import { SocketIOAdapter } from './socket.io.adapter';
 
 @Module({
   imports: [PollsModule, REDISModule,ConfigModule.forRoot(), jwtModule],

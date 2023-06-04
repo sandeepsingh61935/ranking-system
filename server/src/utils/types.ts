@@ -1,3 +1,5 @@
+import { Request } from 'express';
+import { Socket } from 'socket.io';
 // service types
 export type CreatePollFields = {
     topic: string;
@@ -37,5 +39,8 @@ export type AuthPayload = {
   name: string;
 };
 
+type AuthHeader = { headers : {authorization : string}};
+
 export type RequestWithAuth = Request & AuthPayload;
-export type AuthRequest = Request & { headers: { authorization: string } };
+export type AuthRequest = Request & AuthHeader ;
+export type SocketWithAuth = Socket & AuthPayload & AuthHeader;
