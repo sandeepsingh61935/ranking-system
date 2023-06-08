@@ -47,8 +47,8 @@ const createTokenMiddleware =
   (jwtService: JwtService, logger: Logger) =>
   (socket: SocketWithAuth, next) => {
     // for Postman testing support, fallback to token header
-    const token =
-      socket.handshake.auth.token || socket.handshake.headers['Authorization'];
+
+    const token =  socket.handshake.headers?.authorization;
     logger.debug(`Validating auth token before connection: ${token}`);
 
     try {

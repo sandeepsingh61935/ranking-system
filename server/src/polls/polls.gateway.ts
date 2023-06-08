@@ -11,10 +11,7 @@ import { PollsService } from './polls.service';
 import { SocketWithAuth } from '../utils/types';
 
 @WebSocketGateway({
-  namespace: 'polls',
-  cors: {
-    origin: '*',
-  },
+  namespace: 'polls'
 })
 export class PollsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
