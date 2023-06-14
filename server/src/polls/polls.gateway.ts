@@ -1,4 +1,4 @@
-import { BadRequestException, Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   OnGatewayInit,
   WebSocketGateway,
@@ -6,12 +6,15 @@ import {
   OnGatewayDisconnect,
   WebSocketServer,
   SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Namespace } from 'socket.io';
 import { PollsService } from './polls.service';
 import { SocketWithAuth } from '../utils/types';
 import { WsCatchAllFilter } from 'src/exceptions/ws.catch.*.filters';
 import { WsBadRequestException } from 'src/exceptions/ws.exceptions';
+import { GatewayAdminGuard } from './gateway.admin.guard';
 
 @WebSocketGateway({
   namespace: 'polls'
@@ -54,11 +57,24 @@ export class PollsGateway
     this.logger.log(`Disconnected socket id: ${client.id}`);
     this.logger.debug(`Number of connected sockets: ${sockets.size}`);
 
-    // TODO - remove client from poll and send `participants_updated` event to remaining clients
   }
 
-  @SubscribeMessage('test')
-  async test () {
-    throw new BadRequestException('Invalid test data')
+  @UseGuards(GatewayAdminGuard)
+  @SubscribeMessage('remove_participant')
+  async removeParticipant(
+    @MessageBody('id') id: string,
+    @ConnectedSocket() client: SocketWithAuth,
+  ) {
+    this.logger.debug(
+      `Attempting to remove participant ${id} from poll ${client.pollID}`,
+    );
+
+    const updatedPoll = await this.pollsService.removeParticipant(
+      client.pollID,
+      id,
+    );
+    if (updatedPoll) {
+      this.io.emit('poll_updated', updatedPoll);
+    }
   }
 }

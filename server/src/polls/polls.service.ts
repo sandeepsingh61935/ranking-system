@@ -7,6 +7,7 @@ import {
   RejoinPollFields,
 } from "../utils/types";
 import { JwtService } from "@nestjs/jwt";
+import { Poll } from "shared";
 
 @Injectable()
 export class PollsService {
@@ -14,7 +15,7 @@ export class PollsService {
   constructor(
     private readonly PollsRedisStore: PollsRedisStore,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
   async createPoll(fields: CreatePollFields) {
     const pollID = createPollID();
     const userID = createUserID();
@@ -78,10 +79,27 @@ export class PollsService {
     this.logger.debug(
       `Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`
     );
-     
-    console.log(typeof fields)
+
     const joinedPoll = await this.PollsRedisStore.addParticipant(fields);
 
     return joinedPoll;
   }
+
+  async getPoll(pollID: string) {
+    return this.PollsRedisStore.getPoll(pollID);
+  }
+
+  async removeParticipant(
+    pollID: string,
+    userID: string,
+  ): Promise<Poll | void> {
+    const poll = await this.PollsRedisStore.getPoll(pollID);
+
+    const updatedPoll = await this.PollsRedisStore.removeParticipant(
+      pollID,
+      userID,
+    );
+    return updatedPoll;
+  }
 }
+

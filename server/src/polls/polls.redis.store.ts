@@ -113,4 +113,24 @@ export class PollsRedisStore {
       throw e;
     }
   }
+
+  async removeParticipant(pollID: string, userID: string): Promise<Poll> {
+    this.logger.log(`removing userID: ${userID} from poll: ${pollID}`);
+
+    const key = `polls:${pollID}`;
+    try {
+      let redisStoredValue = await this.redisClient.get(key);
+      let pollJSON = JSON.parse(redisStoredValue);
+      delete pollJSON.participants[userID];
+      await this.redisClient.set(key,JSON.stringify(pollJSON));
+      const poll = pollJSON as Poll;
+      return poll;
+    } catch (e) {
+      this.logger.error(
+        `Failed to remove userID: ${userID} from poll: ${pollID}`,
+        e,
+      );
+      throw new InternalServerErrorException('Failed to remove participant');
+    }
+  }
 }
