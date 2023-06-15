@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { Nomination } from 'shared';
 import { Socket } from 'socket.io';
 // service types
 export type CreatePollFields = {
@@ -18,6 +19,18 @@ export type CreatePollFields = {
     name: string;
   };
   
+  export type AddParticipantFields = {
+    pollID: string;
+    userID: string;
+    name: string;
+  };
+  
+  export type AddNominationFields = {
+    pollID: string;
+    userID : string;
+    text: string;
+  }
+  
   // repository types
   export type CreatePollData = {
     pollID: string;
@@ -26,12 +39,16 @@ export type CreatePollFields = {
     userID: string;
   };
   
-  export type AddParticipantFields = {
+  export type AddNominationData = {
     pollID: string;
-    userID: string;
-    name: string;
-  };
-
+    nominationID : string;
+    nomination: Nomination;
+  }
+  export type RemoveNominationFields = {
+    pollID: string;
+    nominationID: string
+  }
+  
 // auth-guard type
 export type AuthPayload = {
   userID: string;

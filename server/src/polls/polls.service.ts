@@ -1,17 +1,21 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { createPollID, createUserID } from "../utils/ids";
+import { createNominationID, createPollID, createUserID } from "../utils/ids";
 import { PollsRedisStore } from "./polls.redis.store";
 import {
+  AddNominationData,
+  AddNominationFields,
   AddParticipantFields,
   CreatePollFields,
   JoinPollFields,
   RejoinPollFields,
+  RemoveNominationFields,
 } from "../utils/types";
 import { JwtService } from "@nestjs/jwt";
 import { Poll } from "shared";
 
 @Injectable()
 export class PollsService {
+  
   private readonly logger = new Logger(PollsService.name);
   constructor(
     private readonly PollsRedisStore: PollsRedisStore,
@@ -107,5 +111,44 @@ export class PollsService {
   async addParticipant(addParticipant: AddParticipantFields): Promise<Poll> {
     return this.PollsRedisStore.addParticipant(addParticipant);
   }
+
+  async addNomination({
+    pollID,
+    userID,
+    text,
+  }: AddNominationFields): Promise<Poll> {
+    return this.PollsRedisStore.addNomination({
+      pollID,
+      nominationID: createNominationID(),
+      nomination: {
+        userID,
+        text,
+      },
+    });
+  }
+
+  /**
+   * 
+   * @param pollID string
+   * @param nominationID string
+   * @returns updatedPoll Poll
+   */
+  async removeNomination(
+    pollID: string,
+    nominationID : string
+    ): Promise<Poll>{
+    return this.PollsRedisStore.removeNomination(pollID,nominationID);
+  }
+  /**
+   * 
+   * @param pollID string
+   * @param nominationIDs [string] 
+   * @description Helpful in removing multiple nominations at once.  
+   * @returns Poll
+   */
+  async removeNominations(pollID: string, nominationIDs: [string]) : Promise<Poll>{
+    return this.PollsRedisStore.removeNominations(pollID,nominationIDs);
+  }
+  
 }
 
