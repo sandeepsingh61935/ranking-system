@@ -4,7 +4,7 @@ import { ConfigService } from "@nestjs/config";
 import { Redis } from "ioredis";
 import { IORedisKey } from "src/redis.module";
 import { AddNominationData, AddParticipantFields, AddParticipantRankingsData, CreatePollData } from "../utils/types";
-import { Nominations, Poll } from "shared";
+import { Nominations, Poll, Results } from "shared";
 import { WsBadRequestException } from "src/exceptions/ws.exceptions";
 
 @Injectable()
@@ -32,9 +32,11 @@ export class PollsRedisStore {
       votesPerVoter,
       participants: {},
       hasStarted: false,
+      hasEnded: false,
       adminID: userID,
       nominations: {},
-      rankings: {}
+      rankings: {},
+      results: [],
     };
 
     this.logger.log(
@@ -293,7 +295,6 @@ export class PollsRedisStore {
         JSON.stringify(pollJSON),
       );
       return pollJSON as Poll;
-      
     } catch (e) {
       this.logger.error(
         `Failed to add a rankings for userID/name: ${userID}/ to pollID: ${pollID}`,
@@ -301,6 +302,50 @@ export class PollsRedisStore {
       );
       throw new InternalServerErrorException(
         'There was an error starting the poll',
+      );
+    }
+  }
+
+  async addResults(pollID: string, results: Results): Promise<Poll> {
+    this.logger.log(
+      `Attempting to add results to pollID: ${pollID}`,
+      JSON.stringify(results),
+    );
+
+    const key = `polls:${pollID}`;
+    const resultsPath = `.results`;
+
+    try {
+      let redisStoredValue = await this.redisClient.get(key);
+      let pollJSON = JSON.parse(redisStoredValue);
+      pollJSON.results = results;
+      pollJSON.hasEnded = true;
+      await this.redisClient.set(key,JSON.stringify(pollJSON));
+
+      return pollJSON as Poll;
+    } catch (e) {
+      this.logger.error(
+        `Failed to add add results for pollID: ${pollID}`,
+        results,
+        e,
+      );
+      throw new InternalServerErrorException(
+        `Failed to add add results for pollID: ${pollID}`,
+      );
+    }
+  }
+
+  async deletePoll(pollID: string): Promise<void> {
+    const key = `polls:${pollID}`;
+
+    this.logger.log(`deleting poll: ${pollID}`);
+
+    try {
+      await this.redisClient.del( key);
+    } catch (e) {
+      this.logger.error(`Failed to delete poll: ${pollID}`, e);
+      throw new InternalServerErrorException(
+        `Failed to delete poll: ${pollID}`,
       );
     }
   }

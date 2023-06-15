@@ -12,7 +12,8 @@ import {
   SubmitRankingsFields,
 } from "../utils/types";
 import { JwtService } from "@nestjs/jwt";
-import { Poll } from "shared";
+import { Nominations, Poll, Rankings, Results } from "shared";
+import e from "express";
 
 @Injectable()
 export class PollsService {
@@ -154,7 +155,10 @@ export class PollsService {
     return this.PollsRedisStore.startPoll(pollID);
   }
   async submitRankings(rankingsData: SubmitRankingsFields): Promise<Poll> {
-    const hasPollStarted = this.PollsRedisStore.getPoll(rankingsData.pollID);
+    const poll : Poll = await this.PollsRedisStore.getPoll(rankingsData.pollID);
+    const hasPollStarted = poll.hasStarted;
+    if(poll.hasEnded) 
+      throw new BadRequestException(`Poll: ${poll.id} has Ended. Rankings is as follows : ${JSON.stringify(poll.rankings)}`)
 
     if (!hasPollStarted) {
       throw new BadRequestException(
@@ -162,7 +166,54 @@ export class PollsService {
       );
     }
 
+    if (poll.votesPerVoter !== rankingsData.rankings.length) {
+      throw new BadRequestException(
+        `Ranking size is greater than votesPerVoter: ${poll.votesPerVoter}`
+      );
+    }
+      
     return this.PollsRedisStore.addParticipantRankings(rankingsData);
+  }
+
+  async computeResults(pollID: string): Promise<Poll> {
+      const poll = await this.PollsRedisStore.getPoll(pollID);
+      
+      const results = await this.getResults(
+        poll.rankings,
+        poll.nominations,
+        poll.votesPerVoter,
+      );
+  
+      return this.PollsRedisStore.addResults(pollID, results);    
+  }
+
+  async cancelPoll(pollID: string): Promise<void> {
+    await this.PollsRedisStore.deletePoll(pollID);
+  }
+
+  async getResults(rankings: Rankings, nominations: Nominations, votesPerVoter: number): Promise<Results> {
+    const scores: { [nominationID: string]: number } = {};
+
+    Object.values(rankings).forEach((userRankings) => {
+      userRankings.forEach((nominationID, n) => {
+        const voteValue = Math.pow(
+          (votesPerVoter - 0.5 * n) / votesPerVoter,
+          n + 1,
+        );
+
+        scores[nominationID] = (scores[nominationID] ?? 0) + voteValue;
+      });
+    });
+
+    const results = Object.entries(scores).map(([nominationID, score]) => ({
+      nominationID,
+      nominationText: nominations[nominationID].text,
+      score,
+    }));
+
+    results.sort((res1, res2) => res2.score - res1.score);
+
+    return results;
   }
 }
 

@@ -4,8 +4,15 @@ export type Participants = {
 export type Nomination = {
   userID: string;
   text: string;
-} 
-type NominationID = string;
+}
+
+export type Results = Array<{
+  nominationID: NominationID,
+  nominationText: string,
+  score: number,
+}>;
+
+export type NominationID = string;
 /**
  * {
  *  'User1' : ['2','3','1'],
@@ -38,6 +45,8 @@ export type Nominations = {
     participants: Participants;
     adminID: string;
     hasStarted: boolean;
+    hasEnded: boolean;
     nominations: Nominations;
     rankings: Rankings;
+    results: Results;
   }

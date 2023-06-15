@@ -2,7 +2,6 @@ import { Body, Controller, Logger, Post, Req, UseGuards, UsePipes, ValidationPip
 import { CreatePollDto, JoinPollDto } from './polls.dtos';
 import { PollsService } from './polls.service';
 import { PollsAuthGuard } from './polls.auth.guard';
-import { RequestWithAuth } from 'src/utils/types';
 
 @Controller('polls')
 @UsePipes(new ValidationPipe())
