@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { createNominationID, createPollID, createUserID } from "../utils/ids";
 import { PollsRedisStore } from "./polls.redis.store";
 import {
@@ -9,6 +9,7 @@ import {
   JoinPollFields,
   RejoinPollFields,
   RemoveNominationFields,
+  SubmitRankingsFields,
 } from "../utils/types";
 import { JwtService } from "@nestjs/jwt";
 import { Poll } from "shared";
@@ -149,6 +150,19 @@ export class PollsService {
   async removeNominations(pollID: string, nominationIDs: [string]) : Promise<Poll>{
     return this.PollsRedisStore.removeNominations(pollID,nominationIDs);
   }
-  
+  async startPoll(pollID: string ) : Promise<Poll> {
+    return this.PollsRedisStore.startPoll(pollID);
+  }
+  async submitRankings(rankingsData: SubmitRankingsFields): Promise<Poll> {
+    const hasPollStarted = this.PollsRedisStore.getPoll(rankingsData.pollID);
+
+    if (!hasPollStarted) {
+      throw new BadRequestException(
+        'Participants cannot rank until the poll has started.',
+      );
+    }
+
+    return this.PollsRedisStore.addParticipantRankings(rankingsData);
+  }
 }
 

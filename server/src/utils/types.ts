@@ -31,6 +31,17 @@ export type CreatePollFields = {
     text: string;
   }
   
+  export type SubmitRankingsFields = {
+    pollID: string;
+    userID: string;
+    rankings: string[];
+  };
+  
+  export type RemoveNominationFields = {
+    pollID: string;
+    nominationID: string
+  }
+
   // repository types
   export type CreatePollData = {
     pollID: string;
@@ -44,11 +55,14 @@ export type CreatePollFields = {
     nominationID : string;
     nomination: Nomination;
   }
-  export type RemoveNominationFields = {
+
+  export type AddParticipantRankingsData = {
     pollID: string;
-    nominationID: string
-  }
-  
+    userID: string;
+    rankings: string[];
+  };
+
+
 // auth-guard type
 export type AuthPayload = {
   userID: string;

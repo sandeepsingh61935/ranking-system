@@ -3,7 +3,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Redis } from "ioredis";
 import { IORedisKey } from "src/redis.module";
-import { AddNominationData, AddParticipantFields, CreatePollData } from "../utils/types";
+import { AddNominationData, AddParticipantFields, AddParticipantRankingsData, CreatePollData } from "../utils/types";
 import { Nominations, Poll } from "shared";
 import { WsBadRequestException } from "src/exceptions/ws.exceptions";
 
@@ -34,6 +34,7 @@ export class PollsRedisStore {
       hasStarted: false,
       adminID: userID,
       nominations: {},
+      rankings: {}
     };
 
     this.logger.log(
@@ -249,6 +250,57 @@ export class PollsRedisStore {
 
       throw new InternalServerErrorException(
         `Failed to remove nominationIDs: ${nominationIDs} from poll: ${pollID}`,
+      );
+    }
+  }
+  async startPoll(pollID: string): Promise<Poll> {
+    this.logger.log(`setting hasStarted for poll : ${pollID}`);
+    const key = `polls:${pollID}`;
+
+    try {
+      let redisStoredValue = await this.redisClient.get(key);
+      let pollJSON = JSON.parse(redisStoredValue);
+      pollJSON.hasStarted = true;
+      await this.redisClient.set(key,JSON.stringify(pollJSON));
+      return pollJSON as Poll;
+    }
+    catch(error) {
+      this.logger.error(`Failed to set hasStarted for poll: ${pollID}`);
+      throw new InternalServerErrorException('Occured whiling setting hasStarted')
+    }
+  }
+
+  async addParticipantRankings({
+    pollID,
+    userID,
+    rankings,
+  }: AddParticipantRankingsData): Promise<Poll> {
+    this.logger.log(
+      `Attempting to add rankings for userID/name: ${userID} to pollID: ${pollID}`,
+      rankings,
+    );
+
+    const key = `polls:${pollID}`;
+    const rankingsPath = `.rankings.${userID}`;
+
+    try {
+
+      let redisStoredValue = await this.redisClient.get(key);
+      let pollJSON = JSON.parse(redisStoredValue);
+      pollJSON.rankings[userID] = rankings;
+      await this.redisClient.set(
+        key,
+        JSON.stringify(pollJSON),
+      );
+      return pollJSON as Poll;
+      
+    } catch (e) {
+      this.logger.error(
+        `Failed to add a rankings for userID/name: ${userID}/ to pollID: ${pollID}`,
+        rankings,
+      );
+      throw new InternalServerErrorException(
+        'There was an error starting the poll',
       );
     }
   }
