@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
 import { IORedisKey } from 'src/redis.module';
-import { AddParticipantData, CreatePollData } from '../utils/types';
+import { AddParticipantFields, CreatePollData } from '../utils/types';
 import { Poll } from 'shared';
 
 @Injectable()
@@ -30,6 +30,7 @@ export class PollsRedisStore {
       topic,
       votesPerVoter,
       participants: {},
+      hasStarted: false,
       adminID: userID,
     };
 
@@ -84,7 +85,7 @@ export class PollsRedisStore {
     pollID,
     userID,
     name,
-  }: AddParticipantData): Promise<Poll> {
+  }: AddParticipantFields): Promise<Poll> {
     this.logger.log(
       `Attempting to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`,
     );

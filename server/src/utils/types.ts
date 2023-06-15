@@ -26,7 +26,7 @@ export type CreatePollFields = {
     userID: string;
   };
   
-  export type AddParticipantData = {
+  export type AddParticipantFields = {
     pollID: string;
     userID: string;
     name: string;

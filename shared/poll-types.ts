@@ -8,4 +8,5 @@ export interface Participants {
     votesPerVoter: number;
     participants: Participants;
     adminID: string;
+    hasStarted: boolean;
   }

@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { createPollID, createUserID } from "../utils/ids";
 import { PollsRedisStore } from "./polls.redis.store";
 import {
+  AddParticipantFields,
   CreatePollFields,
   JoinPollFields,
   RejoinPollFields,
@@ -94,12 +95,17 @@ export class PollsService {
     userID: string,
   ): Promise<Poll | void> {
     const poll = await this.PollsRedisStore.getPoll(pollID);
+    if (!poll.hasStarted) {
+      const updatedPoll = await this.PollsRedisStore.removeParticipant(
+        pollID,
+        userID,
+      );
+      return updatedPoll;
+    }
+  }
 
-    const updatedPoll = await this.PollsRedisStore.removeParticipant(
-      pollID,
-      userID,
-    );
-    return updatedPoll;
+  async addParticipant(addParticipant: AddParticipantFields): Promise<Poll> {
+    return this.PollsRedisStore.addParticipant(addParticipant);
   }
 }
 

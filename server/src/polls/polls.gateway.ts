@@ -22,10 +22,9 @@ import { GatewayAdminGuard } from './gateway.admin.guard';
 @UsePipes(new ValidationPipe())
 @UseFilters(new WsCatchAllFilter())
 export class PollsGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(PollsGateway.name);
-  constructor(private readonly pollsService: PollsService) {}
+  constructor(private readonly pollsService: PollsService) { }
 
   @WebSocketServer() io: Namespace;
 
@@ -34,7 +33,7 @@ export class PollsGateway
     this.logger.log(`Websocket Gateway initialized.`);
   }
 
-  handleConnection(client: SocketWithAuth) {
+  async handleConnection(client: SocketWithAuth) {
     const sockets = this.io.sockets;
 
     this.logger.debug(
@@ -42,21 +41,45 @@ export class PollsGateway
     );
 
     this.logger.log(`WS Client with id: ${client.id} connected!`);
-    this.logger.debug(`Number of connected sockets: ${sockets.size}`);
+    this.logger.log(`Total clients connected to socket: ${sockets.size}`);
+    const roomName = client.pollID;
+    await client.join(roomName);
+    
+    const connectedClients = this.io.adapter.rooms.get(roomName)?.size ?? 0;
 
-    this.io.emit('hello', `from ${client.id}`);
+    this.logger.log(`UserId : ${client.userID} joined room with name: ${roomName}`);
+    this.logger.debug(`Total clients connected to room ${roomName}:${connectedClients}`);
+    
+    const newParticipant = await this.pollsService.addParticipant({
+      userID: client.userID,
+      name : client.name,
+      pollID: client.pollID
+    });
+
+    this.io.to(roomName).emit('poll_updated',newParticipant);
   }
 
-  handleDisconnect(client: SocketWithAuth) {
+  async handleDisconnect(client: SocketWithAuth) {
     const sockets = this.io.sockets;
+    const {userID, pollID } = client;
 
-    this.logger.debug(
-      `Socket connected with userID: ${client.userID}, pollID: ${client.pollID}, and name: "${client.name}"`,
-    );
+    const updatedPoll = await this.pollsService.removeParticipant(pollID,userID);
+    // room => client.pollId. every clients is connected to this room. 
+    // so, after freeing a client. log certain messages. 
+    const roomName = client.pollID;
+    const connectedClients = this.io.adapter.rooms.get(roomName)?.size ?? 0;
 
+    this.logger.log(`UserId : ${client.userID} left room: ${roomName}`);
+    this.logger.debug(`Total clients connected to room ${roomName}:${connectedClients}`);
     this.logger.log(`Disconnected socket id: ${client.id}`);
     this.logger.debug(`Number of connected sockets: ${sockets.size}`);
 
+    // updatedPoll undefined means the poll has already started.
+    // And the current user is something unable to connect to the socket.
+    // So, this is done to avoid broadcast to all clients.
+    if(updatedPoll) {
+      this.io.to(roomName).emit('poll_updated',updatedPoll);
+    }
   }
 
   @UseGuards(GatewayAdminGuard)
