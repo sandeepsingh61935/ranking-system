@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3030,
+    host: true
   },
   preview: {
     port: 8080,
@@ -14,5 +15,5 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCaseOnly',
     },
-  },
+  }
 })
