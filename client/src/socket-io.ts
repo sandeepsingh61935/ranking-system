@@ -28,8 +28,23 @@ export const createSocketWithHandlers = ({
     console.log(
       `Connected with socket ID: ${socket.id}. UserID: ${state.me?.id} will join room ${state.poll?.id}`
     );
+    actions.stopLoading();
   });
 
+  socket.on('connect_error', () => {
+    console.log(`Failed to connect socket`);
+    actions.addWsError({
+        type: 'Connection Error',
+        message: 'Failed to connect to the poll',
+      });
+    actions.stopLoading();
+  });
+
+  socket.on('exception', (error) => {
+    console.log('WS exception: ', error);
+    actions.addWsError(error);
+  });
+  
   socket.on('poll_updated', (poll) => {
     console.log('event: "poll_updated" received', poll);
     actions.updatePoll(poll);

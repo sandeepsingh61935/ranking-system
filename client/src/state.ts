@@ -1,15 +1,16 @@
 import { Poll } from 'shared/poll-types';
 import { derive, subscribeKey } from 'valtio/utils';
-import { proxy, ref } from  'valtio';
+import { proxy, ref } from 'valtio';
 import { getTokenPayload } from './util';
 import { createSocketWithHandlers, socketIOUrl } from './socket-io';
 import { Socket } from 'socket.io-client';
+import { nanoid } from 'nanoid';
 
 export enum AppPage {
-  Welcome = 'welcome',
-  Create = 'create',
-  Join = 'join',
-  WaitingRoom = 'waiting-room',
+    Welcome = 'welcome',
+    Create = 'create',
+    Join = 'join',
+    WaitingRoom = 'waiting-room',
 }
 
 type Me = {
@@ -17,93 +18,113 @@ type Me = {
     name: string;
 }
 
+type WsError = {
+    type: string;
+    message: string;
+}
+
+type WsErrorUnique = WsError & {
+    id: string;
+};
+
 export type AppState = {
-  isLoading: boolean;
-  currentPage: AppPage;
-  poll?: Poll;
-  me? : Me,
-  accessToken?: string;
-  socket?: Socket;
+    isLoading: boolean;
+    currentPage: AppPage;
+    poll?: Poll;
+    me?: Me,
+    accessToken?: string;
+    socket?: Socket;
+    wsErrors: WsErrorUnique[];
 }
 
 const state: AppState = proxy({
-  isLoading: false,
-  currentPage: AppPage.Welcome,
+    isLoading: false,
+    currentPage: AppPage.Welcome,
 });
 
 const deriveState: AppState = derive(
     {
-      me: (get) => {
-        const accessToken = get(state).accessToken;
-  
-        if (!accessToken) {
-          return;
-        }
-  
-        const token = getTokenPayload(accessToken);
-  
-        return {
-          id: token.sub,
-          name: token.name,
-        };
-      },
-      isAdmin: (get) => {
-        if (!get(state).me) {
-          return false;
-        }
-        return get(state).me?.id === get(state).poll?.adminID;
-      },
+        me: (get) => {
+            const accessToken = get(state).accessToken;
+
+            if (!accessToken) {
+                return;
+            }
+
+            const token = getTokenPayload(accessToken);
+
+            return {
+                id: token.sub,
+                name: token.name,
+            };
+        },
+        isAdmin: (get) => {
+            if (!get(state).me) {
+                return false;
+            }
+            return get(state).me?.id === get(state).poll?.adminID;
+        },
     },
     {
-      proxy: state,
+        proxy: state,
     }
 )
 
 
 const actions = {
-  setPage: (page: AppPage): void => {
-    state.currentPage = page;
-  },
-  startOver: (): void => {
-    actions.setPage(AppPage.Welcome);
-  },
-  startLoading: (): void => {
-    state.isLoading = true;
-  },
-  stopLoading: (): void => {
-    state.isLoading = false;
-  },
-  initializePoll: (poll?: Poll): void => {
-    state.poll = poll;
-  },
-  setPollAccessToken: (token?: string): void => {
-    state.accessToken = token;
-  },
-  initializeSocket: (): void => {
-    if (!state.socket) {
-      state.socket = ref(
-        createSocketWithHandlers({
-          socketIOUrl,
-          state,
-          actions,
-        })
-      );
-    } else {
-      state.socket.connect();
-    }
-  },
-  updatePoll: (poll: Poll): void => {
-    state.poll = poll;
-  },
+    setPage: (page: AppPage): void => {
+        state.currentPage = page;
+    },
+    startOver: (): void => {
+        actions.setPage(AppPage.Welcome);
+    },
+    startLoading: (): void => {
+        state.isLoading = true;
+    },
+    stopLoading: (): void => {
+        state.isLoading = false;
+    },
+    initializePoll: (poll?: Poll): void => {
+        state.poll = poll;
+    },
+    setPollAccessToken: (token?: string): void => {
+        state.accessToken = token;
+    },
+    initializeSocket: (): void => {
+        if (!state.socket) {
+            state.socket = ref(
+                createSocketWithHandlers({
+                    socketIOUrl,
+                    state,
+                    actions,
+                })
+            );
+        } else {
+            state.socket.connect();
+        }
+    },
+    updatePoll: (poll: Poll): void => {
+        state.poll = poll;
+    },
+    addWsError: (error: WsError): void => {
+        state.wsErrors = [
+            ...state.wsErrors,
+            {
+                ...error,
+                id: nanoid(6),
+            },
+        ];
+    },
+    removeWsError: (id: string): void => {
+        state.wsErrors = state.wsErrors.filter((error) => error.id !== id);
+    },
 };
 
 subscribeKey(state, 'accessToken', () => {
-    if (state.accessToken && state.poll) {
-      localStorage.setItem('accessToken', state.accessToken);
-    } else {
-      localStorage.removeItem('accessToken');
+    if (state.accessToken) {
+        localStorage.setItem('accessToken', state.accessToken);
     }
-  });
+});
 
 export type AppActions = typeof actions;
 export { deriveState as state, actions };
