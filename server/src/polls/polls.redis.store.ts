@@ -99,7 +99,7 @@ export class PollsRedisStore {
       let pollJSON = JSON.parse(redisStoredValue);
       pollJSON.participants[userID] = name;
 
-      await this.redisClient.set(key, JSON.stringify(pollJSON));
+      await this.redisClient.multi().set(key, JSON.stringify(pollJSON)).expire(key,this.ttl).exec();
 
       const poll = pollJSON as Poll;
 

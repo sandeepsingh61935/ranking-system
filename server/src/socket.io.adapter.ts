@@ -21,6 +21,7 @@ export class SocketIOAdapter extends IoAdapter {
     const cors = {
       origin: [
         `http://localhost:${clientPort}`,
+        `http://127.0.0.1:${clientPort}`,
         new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
       ],
     };
@@ -46,9 +47,7 @@ export class SocketIOAdapter extends IoAdapter {
 const createTokenMiddleware =
   (jwtService: JwtService, logger: Logger) =>
   (socket: SocketWithAuth, next) => {
-    // for Postman testing support, fallback to token header
-
-    const token =  socket.handshake.headers?.authorization;
+    const token =  socket.handshake.auth?.token;
     logger.debug(`Validating auth token before connection: ${token}`);
 
     try {

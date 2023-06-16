@@ -21,7 +21,7 @@ import {
       const socket: SocketWithAuth = context.switchToWs().getClient();
 
       // for testing support, fallback to token header
-      const token =  socket.handshake.headers?.authorization;
+      const token =  socket.handshake.auth?.token;
   
       if (!token) {
         this.logger.error('No authorization token provided');

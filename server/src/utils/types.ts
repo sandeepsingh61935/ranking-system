@@ -70,7 +70,7 @@ export type AuthPayload = {
   name: string;
 };
 
-type AuthHeader = { headers : {authorization : string}};
+type AuthHeader = { auth : {token : string}};
 
 export type RequestWithAuth = Request & AuthPayload;
 export type AuthRequest = Request & AuthHeader ;
