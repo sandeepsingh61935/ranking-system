@@ -11,6 +11,7 @@ export enum AppPage {
     Create = 'create',
     Join = 'join',
     WaitingRoom = 'waiting-room',
+    Voting = 'voting',
 }
 
 type Me = {
@@ -104,9 +105,16 @@ const actions = {
                     actions,
                 })
             );
-        } else {
-            state.socket.connect();
+
+            return;
         }
+
+        if (!state.socket.connected) {
+            state.socket.connect();
+            return;
+        }
+
+        actions.stopLoading();
     },
     updatePoll: (poll: Poll): void => {
         state.poll = poll;
@@ -126,6 +134,12 @@ const actions = {
         state.isLoading = false;
         state.socket = undefined;
         state.wsErrors = [];
+    },
+    submitRankings: (rankings: string[]): void => {
+        state.socket?.emit('submit_rankings', { rankings });
+    },
+    cancelPoll: (): void => {
+        state.socket?.emit('cancel_poll');
     },
     removeNomination: (id: string): void => {
         state.socket?.emit('remove_nomination', { id });

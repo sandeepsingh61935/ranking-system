@@ -6,12 +6,14 @@ import Join from './pages/Join';
 import Welcome from './pages/Welcome';
 import { AppPage, actions, state } from './state';
 import { WaitingRoom } from './pages/WaitingRoom';
+import { Voting } from './pages/Voting';
 
 const routeConfig = {
   [AppPage.Welcome]: Welcome,
   [AppPage.Create]: Create,
   [AppPage.Join]: Join,
   [AppPage.WaitingRoom]: WaitingRoom,
+  [AppPage.Voting]: Voting,
 };
 
 const Pages: React.FC = () => {
@@ -20,7 +22,9 @@ const Pages: React.FC = () => {
     if (currentState.poll && currentState.me?.id && !currentState.poll?.hasStarted) {
       actions.setPage(AppPage.WaitingRoom);
     }
-
+    if (currentState.me?.id && currentState.poll?.hasStarted) {
+      actions.setPage(AppPage.Voting);
+    }
     // add sequential check here
   }, [currentState.me?.id, currentState.poll?.hasStarted]);
   return (
