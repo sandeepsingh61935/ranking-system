@@ -2,7 +2,10 @@ import React, { Children, useState, useMemo } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { useScratch } from 'react-use';
 
-const HorizontalSwipeList: React.FC = ({ children }) => {
+type HorizonalSwipeProps = {
+  children: React.ReactNode
+}
+const HorizontalSwipeList: React.FC<HorizonalSwipeProps> = ({ children}) => {
   const [total, childrenArray] = useMemo(
     () => [Children.count(children), Children.toArray(children)],
     [children]

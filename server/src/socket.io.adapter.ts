@@ -22,8 +22,9 @@ export class SocketIOAdapter extends IoAdapter {
       origin: [
         `http://localhost:${clientPort}`,
         `http://127.0.0.1:${clientPort}`,
-        new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
+        'http://ranking-system.com'
       ],
+      methods: ["POST"]
     };
 
     this.logger.log('Configuring SocketIO server with custom CORS options', {

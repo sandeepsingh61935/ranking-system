@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const colorizeText = (text: string): JSX.Element[] =>
   text.split('').map((val, index) => {

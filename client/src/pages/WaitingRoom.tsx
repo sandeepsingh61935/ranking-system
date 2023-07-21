@@ -123,22 +123,16 @@ export const WaitingRoom: React.FC = () => {
         participants={currentState.poll?.participants}
         onRemoveParticipant={confirmRemoveParticipant}
         isAdmin={currentState.isAdmin || false}
-        userID={currentState.me?.id}
-      />
+        userID={currentState.me?.id} children={undefined}      />
       <NominationForm
         title={currentState.poll?.topic}
         isOpen={isNominationFormOpen}
         onClose={() => setIsNominationFormOpen(false)}
-        onSubmitNomination={(nominationText) =>
-          actions.nominate(nominationText)
-        }
+        onSubmitNomination={(nominationText) => actions.nominate(nominationText)}
         nominations={currentState.poll?.nominations}
         userID={currentState.me?.id}
-        onRemoveNomination={(nominationID) =>
-          actions.removeNomination(nominationID)
-        }
-        isAdmin={currentState.isAdmin || false}
-      />
+        onRemoveNomination={(nominationID) => actions.removeNomination(nominationID)}
+        isAdmin={currentState.isAdmin || false} children={undefined}      />
       <ConfirmationDialog
         showDialog={isConfirmationOpen}
         message={confirmationMessage}

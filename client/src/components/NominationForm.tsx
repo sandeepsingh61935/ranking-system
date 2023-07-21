@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MdCancel } from 'react-icons/md';
-import { Nominations } from '../pollState';
+import { Nominations } from '../../../shared/poll-types';
 import BottomSheet, { BottemSheetProps } from './ui/BottomSheet';
 
 type NominationFormProps = {
@@ -36,7 +36,8 @@ const NominationForm: React.FC<NominationFormProps> = ({
   };
 
   return (
-    <BottomSheet isOpen={isOpen} onClose={onClose}>
+    <>
+    <BottomSheet isOpen={isOpen} onClose={onClose} children={undefined}/>
       <div className="flex flex-col px-4 items-center mb-2">
         <h3 className="font-semibold">{title}</h3>
         <div className="w-full my-4">
@@ -79,7 +80,7 @@ const NominationForm: React.FC<NominationFormProps> = ({
           ))}
         </div>
       </div>
-    </BottomSheet>
+    </>
   );
 };
 

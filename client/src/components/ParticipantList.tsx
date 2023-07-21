@@ -1,7 +1,7 @@
-import React from 'react';
-import { MdClose } from 'react-icons/md';
-import BottomSheet, { BottemSheetProps } from './ui/BottomSheet';
-import { Participants } from 'shared/poll-types';
+import React from "react";
+import { MdClose } from "react-icons/md";
+import BottomSheet, { BottemSheetProps } from "./ui/BottomSheet";
+import { Participants } from "shared/poll-types";
 
 type ParticipantListProps = {
   participants?: Participants;
@@ -18,7 +18,8 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
   userID,
   isAdmin,
 }) => (
-  <BottomSheet isOpen={isOpen} onClose={onClose}>
+  <>
+    <BottomSheet isOpen={isOpen} onClose={onClose} children={undefined} />
     <div className="px-8 flex flex-wrap justify-center mb-2">
       {Object.entries(participants).map(([id, participant]) => (
         <div
@@ -42,7 +43,7 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
         </div>
       ))}
     </div>
-  </BottomSheet>
+  </>
 );
 
 export default ParticipantList;

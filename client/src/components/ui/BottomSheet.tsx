@@ -7,6 +7,7 @@ import styles from './BottomSheet.module.css';
 export type BottemSheetProps = {
   isOpen: boolean;
   onClose?: (e: React.MouseEvent<SVGElement, MouseEvent>) => void;
+  children: React.ReactNode
 };
 
 const BottomSheet: React.FC<BottemSheetProps> = ({
