@@ -15,32 +15,32 @@ services:
     environment:
       - NAME=John
 
-  server-paul:
-    build: ./server
-    expose:
-      - "3000"
-    environment:
-      - NAME=Paul
+  # server-paul:
+  #   build: ./server
+  #   expose:
+  #     - "3000"
+  #   environment:
+  #     - NAME=Paul
 
-  server-george:
-    build: ./server
-    expose:
-      - "3000"
-    environment:
-      - NAME=George
+  # server-george:
+  #   build: ./server
+  #   expose:
+  #     - "3000"
+  #   environment:
+  #     - NAME=George
 
-  server-ringo:
-    build: ./server
-    expose:
-      - "3000"
-    environment:
-      - NAME=Ringo
+  # server-ringo:
+  #   build: ./server
+  #   expose:
+  #     - "3000"
+  #   environment:
+  #     - NAME=Ringo
 
-  client:
-    build: ./client
+  # client:
+  #   build: ./client
 
   redis:
-    image: 'redislabs/rejson:2.0.0'
+    image: 'redis:alpine'
     ports:
       - '6379:6379'
     volumes:
