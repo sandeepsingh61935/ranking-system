@@ -22,7 +22,7 @@ export class SocketIOAdapter extends IoAdapter {
       origin: [
         `http://localhost:${clientPort}`,
         `http://127.0.0.1:${clientPort}`,
-        'http://ranking-system.com'
+        'http://peakrater.duckdns.org'
       ],
       methods: ["POST"]
     };
