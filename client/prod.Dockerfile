@@ -1,3 +1,4 @@
+# Step 1: Build the application
 FROM node:16-alpine
 
 # Create app directory
@@ -6,9 +7,11 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json /usr/src/app/
-RUN npm install --prod
+RUN npm install
+RUN npm install vite
 
 # Bundle app source
 COPY . /usr/src/app
 
-CMD [ "npm", "run", "start" ]
+EXPOSE 3000
+CMD [ "vite", "build" ]

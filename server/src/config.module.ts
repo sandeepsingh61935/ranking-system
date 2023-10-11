@@ -7,7 +7,7 @@ export const REDISModule = RedisModule.registerAsync({
     imports: [ConfigModule],
     useFactory: async (configService: ConfigService) => {
       const logger = new Logger('RedisModule');
-  
+      logger.log(`HOST: ${configService.get('REDIS_PORT')}`)
       return {
         connectionOptions: {
           host: configService.get('REDIS_HOST'),

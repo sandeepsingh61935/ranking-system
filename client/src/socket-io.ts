@@ -20,8 +20,7 @@ export const createSocketWithHandlers = ({
   const socket = io(socketIOUrl, {
         auth: {
             token : state.accessToken
-        },
-    transports: ['websocket', 'polling'],
+        }
   });
 
   socket.on('connect', () => {
@@ -31,11 +30,11 @@ export const createSocketWithHandlers = ({
     actions.stopLoading();
   });
 
-  socket.on('connect_error', () => {
+  socket.on('connect_error', (error) => {
     console.log(`Failed to connect socket`);
     actions.addWsError({
         type: 'Connection Error',
-        message: 'Failed to connect to the poll',
+        message: `${error}`,
       });
     actions.stopLoading();
   });

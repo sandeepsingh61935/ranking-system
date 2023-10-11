@@ -1,7 +1,7 @@
 import React from 'react';
 import ResultCard from './ui/ResultCard';
 import HorizontalSwipeList from './ui/HorizontalSwipeList';
-import { Results } from 'shared/poll-types';
+import { Results } from '../../utils/poll-types';
 
 type ResultsList = {
   results: DeepReadonly<Results[]>;

@@ -4,7 +4,7 @@ import { ConfigService } from "@nestjs/config";
 import { Redis } from "ioredis";
 import { IORedisKey } from "src/redis.module";
 import { AddNominationData, AddParticipantFields, AddParticipantRankingsData, CreatePollData } from "../utils/types";
-import { Nominations, Poll, Results } from "../../../shared";
+import { Nominations, Poll, Results } from "../utils/poll-types";
 import { WsBadRequestException } from "src/exceptions/ws.exceptions";
 
 @Injectable()

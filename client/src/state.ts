@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { Poll } from 'shared/poll-types';
+import { Poll } from '../utils/poll-types';
 import { Socket } from 'socket.io-client';
 import { proxy, ref } from 'valtio';
 import { subscribeKey } from 'valtio/utils';

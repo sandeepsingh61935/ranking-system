@@ -12,7 +12,7 @@ import {
   SubmitRankingsFields,
 } from "../utils/types";
 import { JwtService } from "@nestjs/jwt";
-import { Nominations, Poll, Rankings, Results } from "../../../shared";
+import { Nominations, Poll, Rankings, Results } from "../utils/poll-types";
 import e from "express";
 
 @Injectable()

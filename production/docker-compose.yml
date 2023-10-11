@@ -1,0 +1,101 @@
+version: '3.3'
+
+services:
+  nginx-frontend:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/dist:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    networks: 
+      - "net"
+    depends_on:
+      - redis
+      - server-john
+      - client-1
+
+  backend:
+    build: ../server
+    restart: on-failure
+    env_file:
+      - ../server/.env
+    ports:
+      - "8000:8000"
+    environment:
+      - NAME=John
+    networks: 
+      - "net"
+    depends_on:
+      - redis
+
+  # server-paul:
+  #   build: ./server
+  #   ports:
+  #     - "8002:8000"
+  #   environment:
+  #     - NAME=Paul
+  #   restart: on-failure
+  #   networks: 
+  #     - "net"
+  #   env_file:
+  #     - ./server/.env
+
+
+  # server-george:
+  #   build: ./server
+  #   ports:
+  #     - "8003:8000"
+  #   environment:
+  #     - NAME=George
+  #   restart: on-failure
+  #   networks: 
+  #     - "net"
+  #   env_file:
+  #     - ./server/.env
+
+  # server-ringo:
+  #   build: ./server
+  #   ports:
+  #     - "8004:8000"
+  #   environment:
+  #     - NAME=Ringo
+  #   restart: on-failure
+  #   networks: 
+  #     - "net"
+  #   env_file:
+  #     - ./server/.env
+
+
+  frontend:
+    build: ../client
+    ports:
+      - "3000:3000"
+    networks:
+      - "net"
+
+  # client-2:
+  #   build: ./client
+  #   ports:
+  #     - "3001:3000"
+  #   networks:
+  #     - "net"
+  #   depends_on:
+  #     - nginx
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redisdata:/data'
+    networks: 
+      - "net"
+
+volumes:
+  redisdata:
+
+
+networks: 
+    net:
+      external: true

@@ -2,7 +2,7 @@ import { INestApplicationContext, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { Server, ServerOptions } from 'socket.io';
+import { Namespace, Server, ServerOptions } from 'socket.io';
 import { SocketWithAuth } from './utils/types';
 import { PollsModule } from './polls/polls.module';
 
@@ -24,7 +24,8 @@ export class SocketIOAdapter extends IoAdapter {
         `http://127.0.0.1:${clientPort}`,
         'http://peakrater.duckdns.org'
       ],
-      methods: ["POST"]
+      methods: ["POST"],
+      path: "/polls/"
     };
 
     this.logger.log('Configuring SocketIO server with custom CORS options', {
