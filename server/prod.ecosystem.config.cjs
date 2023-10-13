@@ -5,7 +5,7 @@ module.exports= {
     apps: [
       {
         name: 'backend',
-        script: 'npm run start:prod',
+        script: 'dist/main.js',
         env: {
           NODE_ENV: 'production',
         },
