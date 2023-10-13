@@ -25,5 +25,10 @@ export default defineConfig({
   },
   optimizeDeps:{
     force: true
+  },
+  build: {
+    rollupOptions : {
+      input: 'index.html'
+    }
   }
 })
