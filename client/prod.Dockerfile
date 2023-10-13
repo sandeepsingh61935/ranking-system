@@ -8,8 +8,8 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package*.json ./
 RUN npm install --production
-RUN npm install vite -g 
-RUN npm run build
+RUN npm install vite typescript -g 
+RUN  npm run build
 # Bundle app source
 COPY . .
 
