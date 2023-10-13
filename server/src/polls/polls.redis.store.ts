@@ -6,6 +6,7 @@ import { IORedisKey } from "src/redis.module";
 import { AddNominationData, AddParticipantFields, AddParticipantRankingsData, CreatePollData } from "../utils/types";
 import { Nominations, Poll, Results } from "../utils/poll-types";
 import { WsBadRequestException } from "src/exceptions/ws.exceptions";
+import { is } from "is";
 
 @Injectable()
 export class PollsRedisStore {
@@ -97,6 +98,12 @@ export class PollsRedisStore {
     try {
       let redisStoredValue = await this.redisClient.get(key);
       let pollJSON = JSON.parse(redisStoredValue);
+
+      if(pollJSON === null) {
+        pollJSON = {};
+        pollJSON.participants= {};
+
+      }
       pollJSON.participants[userID] = name;
 
       await this.redisClient.multi().set(key, JSON.stringify(pollJSON)).expire(key,this.ttl).exec();

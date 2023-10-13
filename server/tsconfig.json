@@ -17,6 +17,8 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
+    "types": ["node"],
     "paths": {
       "@nestjs/common": ["@nestjs/common/"]
     },

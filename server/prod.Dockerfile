@@ -1,5 +1,4 @@
-# Step 1: Build the application
-FROM node:16-alpine AS prod
+FROM node:16-alpine AS production
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -7,14 +6,14 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install --production
 
-RUN vite build
+RUN npm install --prod
+RUN npm install pm2 -g
+
+RUN npm run build
 # Bundle app source
 COPY . .
 
-
-EXPOSE 3000
-RUN ls -al -R
-
+# Show current folder structure in logs
+                     
 CMD [ "pm2-runtime", "start", "prod.ecosystem.config.cjs" ]

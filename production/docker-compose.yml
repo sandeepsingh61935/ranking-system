@@ -15,8 +15,8 @@ services:
       - server-john
       - client-1
 
-  backend:
-    build: ../server
+  server-john:
+    build: ../server/prod.Dockerfile
     restart: on-failure
     env_file:
       - ../server/.env
@@ -24,6 +24,7 @@ services:
       - "8000:8000"
     environment:
       - NAME=John
+      - NODE_ENV=production
     networks: 
       - "net"
     depends_on:
@@ -67,8 +68,8 @@ services:
   #     - ./server/.env
 
 
-  frontend:
-    build: ../client
+  client-1:
+    build: ../client/prod.Dockerfile
     ports:
       - "3000:3000"
     networks:

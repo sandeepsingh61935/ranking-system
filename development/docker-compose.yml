@@ -16,10 +16,12 @@ services:
       - client-1
 
   server-john:
-    build: ../server
+    build: 
+      context: ../server
+      dockerfile: dev.Dockerfile
     restart: on-failure
     env_file:
-      - ./server/.env
+      - ../server/.env
     ports:
       - "8000:8000"
     environment:
@@ -68,11 +70,16 @@ services:
 
 
   client-1:
-    build: ../client
+    
+    build: 
+      context: ../client
+      dockerfile: dev.Dockerfile
     ports:
       - "3000:3000"
     networks:
       - "net"
+    depends_on:
+      - server-john
 
   # client-2:
   #   build: ./client

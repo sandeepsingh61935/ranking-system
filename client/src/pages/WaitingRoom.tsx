@@ -39,10 +39,7 @@ export const WaitingRoom: React.FC = () => {
   }, []);
   return (
     <>
-       
-       {/** Waiting room part 1*/}
       <div className="flex flex-col w-full justify-between items-center h-full">
-        {/* polls info */}
         <div>
           <h2 className="text-center">Poll Topic</h2>
           <p className="italic text-center mb-4">{currentState.poll?.topic}</p>
@@ -58,7 +55,6 @@ export const WaitingRoom: React.FC = () => {
             <MdContentCopy size={24} />
           </div>
         </div>
-        {/** nomination section */}
         <div className="flex justify-center">
           <button
             className="box btn-orange mx-2 pulsate"
@@ -75,7 +71,6 @@ export const WaitingRoom: React.FC = () => {
             <span>{currentState.nominationCount}</span>
           </button>
         </div>
-        {/** start voting section visible to admin only */}
         <div className="flex flex-col justify-center">
           {currentState.isAdmin ? (
             <>
@@ -114,25 +109,28 @@ export const WaitingRoom: React.FC = () => {
           />
         </div>
       </div>
-
-
-
       <ParticipantList
         isOpen={isParticipantListOpen}
         onClose={() => setIsParticipantListOpen(false)}
         participants={currentState.poll?.participants}
         onRemoveParticipant={confirmRemoveParticipant}
         isAdmin={currentState.isAdmin || false}
-        userID={currentState.me?.id} children={undefined}      />
+        userID={currentState.me?.id}
+      />
       <NominationForm
         title={currentState.poll?.topic}
         isOpen={isNominationFormOpen}
         onClose={() => setIsNominationFormOpen(false)}
-        onSubmitNomination={(nominationText) => actions.nominate(nominationText)}
+        onSubmitNomination={(nominationText) =>
+          actions.nominate(nominationText)
+        }
         nominations={currentState.poll?.nominations}
         userID={currentState.me?.id}
-        onRemoveNomination={(nominationID) => actions.removeNomination(nominationID)}
-        isAdmin={currentState.isAdmin || false} children={undefined}      />
+        onRemoveNomination={(nominationID) =>
+          actions.removeNomination(nominationID)
+        }
+        isAdmin={currentState.isAdmin || false}
+      />
       <ConfirmationDialog
         showDialog={isConfirmationOpen}
         message={confirmationMessage}

@@ -19,7 +19,7 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
   isAdmin,
 }) => (
   <>
-    <BottomSheet isOpen={isOpen} onClose={onClose} children={undefined} />
+    <BottomSheet isOpen={isOpen} onClose={onClose} />
     <div className="px-8 flex flex-wrap justify-center mb-2">
       {Object.entries(participants).map(([id, participant]) => (
         <div

@@ -15,6 +15,7 @@ async function bootstrap() {
     origin: [
       `http://localhost:${clientPort}`,
       `http://127.0.0.1:${clientPort}`,
+      'http://peakrater.duckdns.org',
       new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
     ],
   });
