@@ -2,8 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'frontend',
-      script: 'vite',
-      args: 'serve',
+      script: 'serve',
       env: {
         PM2_SERVE_PATH: 'dist',
         PM2_SERVE_PORT: 3000,
