@@ -7,14 +7,15 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install
-RUN npm install vite typescript -g 
-RUN  npm run build
+RUN npm ci --only=production
+RUN npm install vite pm2 -g
 # Bundle app source
 COPY . .
 
+RUN  npm run build
 
 EXPOSE 3000
+
 RUN ls -al -R
 
 CMD [ "pm2-runtime", "start", "prod.ecosystem.config.cjs" ]
