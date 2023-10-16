@@ -74,6 +74,7 @@ services:
     build: 
       context: ../client
       dockerfile: prod.Dockerfile
+    restart: on-failure
     ports:
       - "3000:3000"
     networks:
