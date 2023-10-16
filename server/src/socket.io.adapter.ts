@@ -25,8 +25,7 @@ export class SocketIOAdapter extends IoAdapter {
       //   `http://peakrater.duckdns.org:${clientPort}`,
       //   `54.144.198.82:${clientPort}`
       // ],
-      methods: ["POST"],
-      path: "/polls/"
+      methods: ["POST"]
     };
 
     this.logger.log('Configuring SocketIO server with custom CORS options', {
@@ -35,7 +34,7 @@ export class SocketIOAdapter extends IoAdapter {
 
     const optionsWithCORS: ServerOptions = {
       ...options,
-      ...cors,
+      cors,
     };
 
     const jwtService = this.app.get(JwtService);
@@ -51,7 +50,7 @@ const createTokenMiddleware =
   (jwtService: JwtService, logger: Logger) =>
   (socket: SocketWithAuth, next) => {
     const token =  socket.handshake.auth?.token;
-    logger.debug(`Validating auth token before connection: ${token}`);
+    logger.debug(`Validating auth token before connection: ${token}`); 
 
     try {
       const payload = jwtService.verify(token);
