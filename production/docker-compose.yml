@@ -7,7 +7,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./client-1/dist:/usr/share/nginx/html
     ports:
-      - "8080:80"
+      - "80:80"
     networks: 
       - "net"
     depends_on:
