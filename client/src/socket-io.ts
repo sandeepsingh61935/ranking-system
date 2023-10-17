@@ -18,6 +18,8 @@ export const createSocketWithHandlers = ({
   console.log(`Creating socket with accessToken: ${state.accessToken}`);
   console.log(socketIOUrl)
   const socket = io(socketIOUrl, {
+        // namespace
+        path: "/polls",
         auth: {
             token : state.accessToken
         }

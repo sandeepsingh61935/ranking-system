@@ -16,16 +16,19 @@ import { WsCatchAllFilter } from 'src/exceptions/ws.catch.*.filters';
 import { WsBadRequestException } from 'src/exceptions/ws.exceptions';
 import { GatewayAdminGuard } from './gateway.admin.guard';
 import { NominationDto } from './polls.dtos';
+import { SocketIOAdapter } from '../socket.io.adapter';
 
 @WebSocketGateway({
-  namespace: 'polls'
+  namespace: 'polls',
+  path: "/polls",
+  adapter: SocketIOAdapter
 })
 @UsePipes(new ValidationPipe())
 @UseFilters(new WsCatchAllFilter())
 export class PollsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(PollsGateway.name);
-  constructor(private readonly pollsService: PollsService) { }
+  constructor(private readonly pollsService: PollsServbvice) { }
 
   @WebSocketServer() io: Namespace;
 
