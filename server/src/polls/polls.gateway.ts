@@ -28,7 +28,7 @@ import { SocketIOAdapter } from '../socket.io.adapter';
 export class PollsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(PollsGateway.name);
-  constructor(private readonly pollsService: PollsServbvice) { }
+  constructor(private readonly pollsService: PollsService) { }
 
   @WebSocketServer() io: Namespace;
 
