@@ -17,7 +17,7 @@ import { WsBadRequestException } from 'src/exceptions/ws.exceptions';
 import { GatewayAdminGuard } from './gateway.admin.guard';
 import { NominationDto } from './polls.dtos';
 
-@WebSocketGateway({
+@WebSocketGateway(8000,{
   namespace: 'polls'
 })
 @UsePipes(new ValidationPipe())
