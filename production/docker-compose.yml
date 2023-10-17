@@ -24,8 +24,6 @@ services:
       - ../server/.env
     ports:
       - "8000:8000"
-    expose:
-      - 8000
     environment:
       - NAME=John
       - NODE_ENV=production
