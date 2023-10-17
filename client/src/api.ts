@@ -18,7 +18,6 @@ const makeRequest = async <T>(
 ): Promise<MakeRequestResponse<T>> => {
   try {
     const response = await fetch(`${baseApiUrl}${endpoint}`, {
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
