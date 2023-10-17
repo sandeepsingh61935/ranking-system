@@ -24,6 +24,8 @@ services:
       - ../server/.env
     ports:
       - "8000:8000"
+    expose:
+      - 8000
     environment:
       - NAME=John
       - NODE_ENV=production
@@ -77,10 +79,13 @@ services:
     restart: on-failure
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - mode=production
+    expose:
+      - 3000
     networks:
       - "net"
-    depends_on:
-      - server-john
 
   # client-2:
   #   build: ./client

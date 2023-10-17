@@ -1,5 +1,4 @@
-const baseApiUrl = `http://${import.meta.env.VITE_API_HOST}:${
-  import.meta.env.VITE_API_PORT
+const baseApiUrl = `http://${import.meta.env.VITE_API_HOST}
 }`;
 
 interface APIError {
@@ -18,7 +17,7 @@ const makeRequest = async <T>(
 ): Promise<MakeRequestResponse<T>> => {
   try {
     const response = await fetch(`${baseApiUrl}${endpoint}`, {
-      mode: 'no-cors',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
