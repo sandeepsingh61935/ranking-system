@@ -13,7 +13,8 @@ async function bootstrap() {
   const clientPort = parseInt(configService.get('CLIENT_PORT'));
   app.enableCors({
     origin: [
-      `http://54.144.198.82:${clientPort}`
+      `http://54.144.198.82:${clientPort}`,
+      'http://54.144.198.82:3000',
     ],
   });
   app.useWebSocketAdapter(new SocketIOAdapter(app, configService));
