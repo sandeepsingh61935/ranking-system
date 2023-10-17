@@ -25,7 +25,8 @@ export class SocketIOAdapter extends IoAdapter {
         `http://peakrater.duckdns.org:${clientPort}`,
         `http://54.144.198.82:${clientPort}`
       ],
-      methods: ["POST"]
+      methods: ["POST"],
+      path: "/polls"
     };
 
     this.logger.log('Configuring SocketIO server with custom CORS options', {
