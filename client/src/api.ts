@@ -38,6 +38,7 @@ const makeRequest = async <T>(
       data: responseJSON as T,
     };
   } catch (e) {
+    console.log(e)
     const error =
       e instanceof Error
         ? {
