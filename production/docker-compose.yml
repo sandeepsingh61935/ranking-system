@@ -1,21 +1,8 @@
 version: '3.3'
 
 services:
-  nginx-frontend:
-    image: nginx:alpine
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./client-1/dist:/usr/share/nginx/html
-    ports:
-      - "80:80"
-    networks: 
-      - "net"
-    depends_on:
-      - redis
-      - server-john
-      - client-1
 
-  server-john:
+  backend:
     build:       
       context: ../server
       dockerfile: prod.Dockerfile
@@ -70,7 +57,7 @@ services:
   #     - ./server/.env
 
 
-  client-1:
+  frontend:
     build: 
       context: ../client
       dockerfile: prod.Dockerfile
@@ -84,6 +71,8 @@ services:
       - 3000
     networks:
       - "net"
+    depends_on:
+      - server-john
 
   # client-2:
   #   build: ./client

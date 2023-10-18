@@ -24,7 +24,6 @@ export class SocketIOAdapter extends IoAdapter {
         `http://127.0.0.1:${clientPort}`,
         `http://peakrater.duckdns.org:${clientPort}`,
         `http://54.144.198.82:${clientPort}`,
-        'http://54.144.198.82:3000',
         `ws://54.144.198.82:${clientPort}`
       ],
       methods: ["POST","GET"]
