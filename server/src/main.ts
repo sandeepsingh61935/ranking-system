@@ -15,6 +15,7 @@ async function bootstrap() {
     origin: [
       `http://54.144.198.82:${clientPort}`,
       'http://54.144.198.82:3000',
+      `wss://54.144.198.82:${clientPort}`
     ],
   });
   app.useWebSocketAdapter(new SocketIOAdapter(app, configService));

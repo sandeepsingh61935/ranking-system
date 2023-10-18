@@ -25,6 +25,7 @@ export class SocketIOAdapter extends IoAdapter {
         `http://peakrater.duckdns.org:${clientPort}`,
         `http://54.144.198.82:${clientPort}`,
         'http://54.144.198.82:3000',
+        `wss://54.144.198.82:${clientPort}`
       ],
       methods: ["POST","GET"],
       path:"/polls"

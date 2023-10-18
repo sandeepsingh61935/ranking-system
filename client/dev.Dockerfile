@@ -16,4 +16,4 @@ EXPOSE 3000
 RUN ls -al
 
 # CMD [ "npm","run","dev"]
-CMD [ "pm2-runtime", "start", "dev.ecosystem.config.cjs" ]
+CMD [ "pm2-runtime", "start", "dev.ecosystem.config.cjs", "--","env" ]

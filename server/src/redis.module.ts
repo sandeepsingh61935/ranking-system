@@ -25,7 +25,7 @@ export class RedisModule {
   }: RedisAsyncModuleOptions): Promise<DynamicModule>  {
     const redisProvider = {
       provide: IORedisKey, // use it to export Redis Provider
-      useFactory: async (...args) => {
+      useFactory: async (...args: any) => {
         const { connectionOptions, onClientReady } = await useFactory(...args);
 
         const client = await new IORedis(connectionOptions);
