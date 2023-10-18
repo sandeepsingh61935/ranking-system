@@ -28,7 +28,7 @@ export class SocketIOAdapter extends IoAdapter {
         `ws://54.144.198.82:${clientPort}`
       ],
       methods: ["POST","GET"],
-      path:"/polls"
+      // path:"/polls"
     };
 
     this.logger.log('Configuring SocketIO server with custom CORS options', {
