@@ -15,6 +15,7 @@ async function bootstrap() {
     origin: [
       `http://54.144.198.82:${clientPort}`,
       'http://54.144.198.82:3000',
+      'http://client-1:3000',
       `ws://54.144.198.82:${clientPort}`
     ],
   });

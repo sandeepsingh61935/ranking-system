@@ -1,8 +1,9 @@
 import { io, Socket } from 'socket.io-client';
 import { AppActions, AppState } from './state';
 
-export const socketIOUrl = `http://${import.meta.env.VITE_API_HOST}/${import.meta.env.VITE_POLLS_NAMESPACE}`;
-
+export const socketIOUrl = `http://${import.meta.env.VITE_API_HOST}:${
+  import.meta.env.VITE_API_PORT
+}/${import.meta.env.VITE_POLLS_NAMESPACE}`;
 
 type CreateSocketOptions = {
   socketIOUrl: string;
@@ -20,7 +21,8 @@ export const createSocketWithHandlers = ({
   const socket = io(socketIOUrl, {
         auth: {
             token : state.accessToken
-        }
+        },
+        transports: ['websocket', 'polling'],
   });
 
   socket.on('connect', () => {
