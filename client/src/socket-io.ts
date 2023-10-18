@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import { AppActions, AppState } from './state';
 
-export const socketIOUrl = `wss://${import.meta.env.VITE_API_HOST}/${import.meta.env.VITE_POLLS_NAMESPACE}`;
+export const socketIOUrl = `ws://${import.meta.env.VITE_API_HOST}/${import.meta.env.VITE_POLLS_NAMESPACE}`;
 
 
 type CreateSocketOptions = {
