@@ -14,6 +14,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       `http://54.144.198.82:${clientPort}`,
+      'http://frontend',
       `ws://54.144.198.82:${clientPort}`
     ],
   });

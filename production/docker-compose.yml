@@ -72,7 +72,7 @@ services:
     networks:
       - "net"
     depends_on:
-      - server-john
+      - backend
 
   # client-2:
   #   build: ./client
