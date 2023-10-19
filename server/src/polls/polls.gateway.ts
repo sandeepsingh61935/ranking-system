@@ -19,9 +19,7 @@ import { NominationDto } from './polls.dtos';
 import { SocketIOAdapter } from '../socket.io.adapter';
 
 @WebSocketGateway({
-  namespace: 'polls',
-  path: "/polls",
-  adapter: SocketIOAdapter
+  namespace: 'polls'
 })
 @UsePipes(new ValidationPipe())
 @UseFilters(new WsCatchAllFilter())
@@ -34,10 +32,12 @@ export class PollsGateway
 
   // Gateway initialized (provided in module and instantiated)
   afterInit(): void {
+    this.logger.log(`${this.io.sockets.size}`)
     this.logger.log(`Websocket Gateway initialized.`);
   }
 
   async handleConnection(client: SocketWithAuth) {
+    
     const sockets = this.io.sockets;
 
     this.logger.debug(

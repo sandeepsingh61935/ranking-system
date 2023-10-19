@@ -19,15 +19,7 @@ export class SocketIOAdapter extends IoAdapter {
     const clientPort = parseInt(this.configService.get('CLIENT_PORT'));
 
     const cors = {
-      origin: [
-        `http://localhost:${clientPort}`,
-        `http://127.0.0.1:${clientPort}`,
-        `http://peakrater.duckdns.org:${clientPort}`,
-        `http://54.144.198.82:${clientPort}`,
-        'http://54.144.198.82:3000',
-        'http://client-1:3000',
-        `ws://54.144.198.82:${clientPort}`
-      ],
+      origin: "*",
       methods: ["POST","GET"]
     };
 
@@ -41,7 +33,7 @@ export class SocketIOAdapter extends IoAdapter {
     };
 
     const jwtService = this.app.get(JwtService);
-    const server: Server = super.createIOServer(port,optionsWithCORS);
+    const server: Server = super.createIOServer(port);
     server.of('polls').use(createTokenMiddleware(jwtService, this.logger));
 
     return server;
