@@ -20,7 +20,7 @@ export const createSocketWithHandlers = ({
         auth: {
             token : state.accessToken
         },
-        // transports: ['websocket', 'polling'],
+        transports: ['websocket', 'polling'],
   });
 
   socket.on('connect', () => {
