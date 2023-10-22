@@ -19,15 +19,7 @@ export class SocketIOAdapter extends IoAdapter {
     const clientPort = parseInt(this.configService.get('CLIENT_PORT'));
 
     const cors = {
-      origin: [
-        `http://localhost:${clientPort}`,
-        `http://127.0.0.1:${clientPort}`,
-        `http://peakrater.duckdns.org:${clientPort}`,
-        `http://54.144.198.82:${clientPort}`,
-        'http://54.144.198.82:3000',
-        'http://client-1:3000',
-        `ws://54.144.198.82:${clientPort}`
-      ],
+      origin: "*",
       methods: ["POST","GET"]
     };
 
@@ -41,7 +33,7 @@ export class SocketIOAdapter extends IoAdapter {
     };
 
     const jwtService = this.app.get(JwtService);
-    const server: Server = super.createIOServer(port);
+    const server: Server = super.createIOServer(port, optionsWithCORS);
     server.of('polls').use(createTokenMiddleware(jwtService, this.logger));
 
     return server;
@@ -52,7 +44,7 @@ export class SocketIOAdapter extends IoAdapter {
 const createTokenMiddleware =
   (jwtService: JwtService, logger: Logger) =>
   (socket: SocketWithAuth, next) => {
-    const token =  socket.handshake.auth?.token;
+    const token = socket.handshake.auth.token || socket.handshake.headers['Authorization'];
     logger.debug(`Validating auth token before connection: ${token}`); 
 
     try {

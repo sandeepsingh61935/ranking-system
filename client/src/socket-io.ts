@@ -15,7 +15,6 @@ export const createSocketWithHandlers = ({
   actions,
 }: CreateSocketOptions): Socket => {
   console.log(`Creating socket with accessToken: ${state.accessToken}`);
-  console.log(socketIOUrl)
   const socket = io(socketIOUrl, {
         auth: {
             token : state.accessToken
