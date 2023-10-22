@@ -33,7 +33,7 @@ export class SocketIOAdapter extends IoAdapter {
     };
 
     const jwtService = this.app.get(JwtService);
-    const server: Server = super.createIOServer(port);
+    const server: Server = super.createIOServer(port,optionsWithCORS);
     server.of('polls').use(createTokenMiddleware(jwtService, this.logger));
 
     return server;
@@ -44,7 +44,8 @@ export class SocketIOAdapter extends IoAdapter {
 const createTokenMiddleware =
   (jwtService: JwtService, logger: Logger) =>
   (socket: SocketWithAuth, next) => {
-    const token =  socket.handshake.auth?.token;
+    console.log(JSON.stringify(socket.handshake))
+    const token = socket.handshake.auth.token || socket.handshake.headers['Authorization'];
     logger.debug(`Validating auth token before connection: ${token}`); 
 
     try {

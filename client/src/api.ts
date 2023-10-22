@@ -1,4 +1,6 @@
-const baseApiUrl = `http://${import.meta.env.VITE_API_HOST}`;
+const baseApiUrl = `http://${import.meta.env.VITE_API_HOST}:${
+  import.meta.env.VITE_API_PORT
+}`;
 
 interface APIError {
   messages: string[];
@@ -22,7 +24,7 @@ const makeRequest = async <T>(
       },
       ...reqInit,
     });
-
+    
     const responseJSON = await response.json();
 
     if (!response.ok) {
