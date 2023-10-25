@@ -3,7 +3,7 @@ import { AppPage, actions } from '../state';
 
 const Welcome: React.FC = () => {
   return (
-    <div className="flex flex-col justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center w-full h-full">
       <h1 className="text-center my-12">Welcome to Ranking system</h1>
       <div className="my-12 flex flex-col justify-center">
         <button
