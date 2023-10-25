@@ -5,8 +5,8 @@ module.exports = {
             script: './server/dist/main.js',
             env: {
                 NODE_ENV: 'production',
+                PM2_SERVE_PORT: 8000
             },
-            instances: 1,
             out_file: "output.log",
             error_file: "error.log"
         },
