@@ -39,7 +39,7 @@ export const WaitingRoom: React.FC = () => {
   }, []);
   return (
     <>
-      <div className="flex flex-col w-full justify-between items-center h-full">
+      <div className="w-full justify-between items-center h-full">
         <div>
           <h2 className="text-center">Poll Topic</h2>
           <p className="italic text-center mb-4">{currentState.poll?.topic}</p>
