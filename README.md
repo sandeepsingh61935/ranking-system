@@ -14,7 +14,9 @@ solve disputable topic by voting amongst friends
   Participants will select their number of choices. Here, the order of selection has a different weight i.e. first selection will outweigh the last choice.
   The Formula to compute results on the order of selections from different participants.
   ![Formula] ()
-  
+
+  ###VIDEO
+  [Video] (https://imgur.com/QeuyRRv)
   ### General
 * [Typescript](https://www.typescriptlang.org/)
 * [Docker](https://www.docker.com/products/docker-desktop)
